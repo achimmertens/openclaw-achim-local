@@ -74,3 +74,81 @@ https://clawhub.ai/
 # Neues Setup
 Achtung. Hierbei wird ein neuer Token erzeugt. Diesen Sieht man nur einmal bei "Dashboard ready"
 Man muss den Token ändern in openclaw.json, den Container einmal neu starten und dann eingeben: http://localhost:18789/#token=2446d52b0efd797ea78cd6479203b05a0454efa1ddf30ede
+
+
+# ---- GitHub Repo für Achims lokalen Branch -----
+
+Könnte ich meinen lokalen Branch irgendwie als eigenes Repo auf Github anlegen? Ich hätte dann immer die Updates vom offiziellen Mainbranch + meine eigenen Scripte in einem eigenen Repo in Github gesichert.
+
+Ja, das geht sehr gut: Du kannst aus deinem lokalen Branch ein **eigenes GitHub‑Repo** machen, das weiterhin den offiziellen OpenClaw‑Repo als „upstream“ eingebunden hat. So bekommst du Updates von dort und sicherst deine eigenen Sachen in deinem privaten/fork‑ähnlichen Repo.
+
+### 1. Lokalen Branch für deine Arbeit vorbereiten
+
+Im bestehenden OpenClaw‑Clone:
+
+```bash
+cd /d/Users/User/git/openclaw
+
+# sicherstellen, dass du auf main bist und alles aktuell ist
+git checkout main
+git pull
+
+# eigenen Arbeits-Branch (falls noch nicht vorhanden)
+git checkout -b achim-local
+```
+
+Jetzt commitest du **alle deine eigenen Dateien** (Scripts, Dockerfile‑Patch, Doku) auf `achim-local`:
+
+```bash
+git add Achims_OpenClaw_Build.sh post_to_hive.py ...   # alle deine Files
+git commit -m "Achim: lokale OpenClaw-Scripts und Doku"
+```
+
+### 2. Neues Repo auf GitHub anlegen und verbinden
+
+1. Auf GitHub ein neues Repo erstellen, z.B. `openclaw-achim-local` (ohne Template, leer).  
+2. Die URL merken, z.B.:
+
+```text
+https://github.com/deinuser/openclaw-achim-local.git
+```
+
+3. In deinem lokalen Clone einen **zweiten Remote** hinzufügen:
+
+```bash
+git remote add mine https://github.com/achimmertens/openclaw-achim-local.git
+```
+
+4. Deinen Branch dorthin pushen:
+
+```bash
+git push -u mine achim-local
+```
+
+Damit hast du:
+
+- `origin` → offizielles OpenClaw‑Repo (nur lesen).  
+- `mine` → dein eigenes GitHub‑Repo mit deinem Branch `achim-local`.
+
+### 3. Upstream‑Updates weiter einziehen
+
+Workflow in Zukunft:
+
+```bash
+# Offizielles Repo aktualisieren
+git checkout main
+git pull origin main
+
+# Deinen Branch auf neuesten Stand bringen
+git checkout achim-local
+git rebase main       # oder: git merge main
+
+# Deine neuen Änderungen committen und zu DEINEM Repo pushen
+git push mine achim-local
+```
+
+So:
+
+- bleibt dein `main` sauber und identisch zu upstream,  
+- lebt deine gesamte Arbeit in `achim-local`,  
+- und du hast sie sicher in deinem eigenen GitHub‑Repo, ohne das OpenClaw‑Projekt anzufassen. [stackoverflow](https://stackoverflow.com/questions/63557584/how-do-i-keep-a-local-version-and-commit-changes-on-git-without-pushing-upstream)
