@@ -2,6 +2,15 @@
 # Achims_OpenClaw_Build.sh
 # git pull, Dockerfile patchen (Python+beem + Himalaya), Image bauen, Gateway neu starten
 
+# Frage nach, ob git commit gemacht wurde in Achim-local Branch und warte auf ein "y"
+read -p "Have you committed your changes in the achim-local branch? (y/n): " -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Great! Proceeding with the build..."
+else
+    echo "Please commit your changes in the achim-local branch before running this script."
+    exit 1
+fi
+
 set -e
 
 echo "Starting Achims_OpenClaw_Build.sh..."
@@ -24,10 +33,24 @@ cp "D:\Users\User\git\openclaw\docker-compose.yml" "C:\Users\User\OneDrive\Win-D
 cp "D:\Users\User\git\openclaw\Dockerfile" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Dockerfile"
 cp "D:\Users\User\git\openclaw\Achims_README.md" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_README.md"
 
-# Updates holen
+
+
+
+########################################
+# 1) git pull
+########################################
+echo "Stashing changes and pulling updates..."
+cd "D:\Users\User\git\openclaw"
+
 echo "Stashing changes and pulling updates..."
 git stash
-git pull
+# Offizielles Repo aktualisieren
+git checkout main
+git pull origin main
+
+# Deinen Branch auf neuesten Stand bringen
+git checkout achim-local
+git rebase main       # oder: git merge main
 
 # Backup Dateien wieder einspielen
 echo "Restoring backups..."
@@ -37,14 +60,7 @@ cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/docker-
 cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/Achims_README.md "D:\Users\User\git\openclaw\Achims_README.md"
 
 
-cd "D:\Users\User\git\openclaw"
 
-########################################
-# 1) git pull
-########################################
-echo "Stashing changes and pulling updates..."
-git stash
-git pull
 
 DOCKERFILE_PATH="D:\Users\User\git\openclaw\Dockerfile"
 
@@ -71,6 +87,59 @@ if ! grep -q "Python 3 + venv + beem bereitstellen" "$DOCKERFILE_PATH"; then
 else
   echo "Combined Himalaya + Python block already present, skipping."
 fi
+
+
+########################################
+# docker-compose.yml: Volumes anpassen
+########################################
+echo "Patching docker-compose.yml volumes..."
+
+COMPOSE_PATH="D:\Users\User\git\openclaw\docker-compose.yml"
+
+node << 'NODE_VOL_EOF'
+const fs = require('fs');
+
+const file = "D:\\Users\\User\\git\\openclaw\\docker-compose.yml";
+let content = fs.readFileSync(file, 'utf8');
+
+// Hilfsfunktion: Volumes-Block eines Service ersetzen
+function replaceVolumes(yml, serviceName, newVolumesBlock) {
+  const serviceRegex = new RegExp(
+    `(  ${serviceName}:[\\s\\S]*?)(    volumes:[\\s\\S]*?)(?=^  [a-z]|^services:|\\Z)`,
+    'm'
+  );
+  return yml.replace(serviceRegex, (match, head, volumes) => {
+    return head + newVolumesBlock;
+  });
+}
+
+const gatewayVolumes = `
+    volumes:
+      - \${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
+      - \${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+      - \${OPENCLAW_WORKSPACE_DIR}/workspace-susi:/home/node/.openclaw/workspace/workspace-susi
+      - \${OPENCLAW_CONFIG_DIR}/.config/himalaya:/home/node/.config/himalaya
+      - \${OPENCLAW_CONFIG_DIR}/.local:/home/node/.local
+`;
+
+const cliVolumes = `
+    volumes:
+      - \${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
+      - \${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+      - \${OPENCLAW_WORKSPACE_DIR}/workspace-susi:/home/node/.openclaw/workspace/workspace-susi
+      - \${OPENCLAW_CONFIG_DIR}/.config/himalaya:/home/node/.config/himalaya
+      - \${OPENCLAW_CONFIG_DIR}/.local:/home/node/.local
+`;
+
+let out = content;
+out = replaceVolumes(out, 'openclaw-gateway', gatewayVolumes);
+out = replaceVolumes(out, 'openclaw-cli', cliVolumes);
+
+fs.writeFileSync(file, out, 'utf8');
+console.log('✓ docker-compose.yml volumes patched');
+NODE_VOL_EOF
+
+
 
 
 ########################################
