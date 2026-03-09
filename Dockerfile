@@ -211,7 +211,18 @@ ENV NODE_ENV=production
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)
 # This reduces the attack surface by preventing container escape via root privileges
+
+# Himalaya installieren (als root, Binary landet in /usr/local/bin)
+USER root
+RUN curl -sSL https://raw.githubusercontent.com/pimalaya/himalaya/master/install.sh | sh -s -- --root /usr/local
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Python 3 + venv + beem bereitstellen, damit Agent Python-Scripte ausführen kann
+RUN apt-get update &&     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       python3 python3-venv ca-certificates curl &&     python3 -m venv /opt/pyenv &&     /opt/pyenv/bin/python -m pip install --no-cache-dir --upgrade pip &&     /opt/pyenv/bin/python -m pip install --no-cache-dir beem &&     apt-get clean &&     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+ENV PATH="/opt/pyenv/bin:${PATH}"
+
 USER node
+
 
 # Start gateway server with default config.
 # Binds to loopback (127.0.0.1) by default for security.
