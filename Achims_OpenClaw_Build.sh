@@ -8,7 +8,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Great! Proceeding with the build..."
 else
     echo "Please commit your changes in the achim-local branch before running this script."
-    echo "Use 'git push origin openclaw-achim-local' to push your commits to the remote repository."
+    echo "Use 'git push mine achim-local -f' to push your commits to the remote repository."
     exit 1
 fi
 

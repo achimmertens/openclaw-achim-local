@@ -12,6 +12,12 @@ cp "D:\Users\User\git\openclaw\Achims_README.md" "C:\Users\User\OneDrive\Win-Doc
 git stash
 git pull
 
+$ git remote -v
+mine    https://github.com/achimmertens/openclaw-achim-local.git (fetch)
+mine    https://github.com/achimmertens/openclaw-achim-local.git (push)
+origin  https://github.com/openclaw/openclaw (fetch)
+origin  https://github.com/openclaw/openclaw (push)
+
 # Backup Dateien wieder einspielen
 cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/openclaw.json "D:\OpenClawConfig\openclaw.json"
 cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/.env "D:\Users\User\git\openclaw\.env"
