@@ -36,12 +36,12 @@ set -e  # Exit on any error
 echo "Starting Achims_OpenClaw_Build.sh..."
 
 # Backup der Konfigurationsdateien erstellen
-echo "Creating backups..."
-cp "D:\OpenClawConfig\openclaw.json" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\openclaw.json"
-cp "D:\Users\User\git\openclaw\.env" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\.env"
-cp "D:\Users\User\git\openclaw\docker-compose.yml" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\docker-compose.yml"
-cp "D:\Users\User\git\openclaw\Dockerfile" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Dockerfile"
-cp "D:\Users\User\git\openclaw\Achims_README.md" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_README.md"
+# echo "Creating backups..."
+# cp "D:\OpenClawConfig\openclaw.json" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\openclaw.json"
+# cp "D:\Users\User\git\openclaw\.env" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\.env"
+# cp "D:\Users\User\git\openclaw\docker-compose.yml" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\docker-compose.yml"
+# cp "D:\Users\User\git\openclaw\Dockerfile" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Dockerfile"
+# cp "D:\Users\User\git\openclaw\Achims_README.md" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_README.md"
 
 
 
@@ -64,10 +64,10 @@ git rebase main -Xours       # oder: git merge main
 
 # Backup Dateien wieder einspielen
 echo "Restoring backups..."
-cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/openclaw.json "D:\OpenClawConfig\openclaw.json"
+# cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/openclaw.json "D:\OpenClawConfig\openclaw.json"
 cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/.env "D:\Users\User\git\openclaw\.env"
 cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/docker-compose.yml "D:\Users\User\git\openclaw\docker-compose.yml"
-cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/Achims_README.md "D:\Users\User\git\openclaw\Achims_README.md"
+# cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/Achims_README.md "D:\Users\User\git\openclaw\Achims_README.md"
 
 
 
