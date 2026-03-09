@@ -2,6 +2,15 @@
 # Achims_OpenClaw_Build.sh
 # git pull, Dockerfile patchen (Python+beem + Himalaya), Image bauen, Gateway neu starten
 
+# Frage nach, ob Docker im Hintergrund läuft und warte auf ein "y"
+read -p "Is Docker running in the background? (y/n): " -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Great! Proceeding with the build..."
+else 
+    echo "Bitte schalte das Windows Docker ein!"
+    exit 1
+fi
+
 # Frage nach, ob git commit gemacht wurde in Achim-local Branch und warte auf ein "y"
 read -p "Have you committed your changes in the achim-local branch? (y/n): " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
