@@ -8,6 +8,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Great! Proceeding with the build..."
 else
     echo "Please commit your changes in the achim-local branch before running this script."
+    echo "Use 'git push origin achim-local' to push your commits to the remote repository."
     exit 1
 fi
 
@@ -50,7 +51,7 @@ git pull origin main
 
 # Deinen Branch auf neuesten Stand bringen
 git checkout achim-local
-git rebase main       # oder: git merge main
+git rebase main -Xours       # oder: git merge main
 
 # Backup Dateien wieder einspielen
 echo "Restoring backups..."
