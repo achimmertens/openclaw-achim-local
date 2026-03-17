@@ -25,8 +25,31 @@ set -e
 
 echo "Starting Achims_OpenClaw_Build.sh..."
 
-# Stash lokale Änderungen
-echo "Stashing local changes..."
+
+#!/bin/bash
+
+# Achims_OpenClaw_Build.sh
+# Script to backup configs, pull updates, restore configs, modify Dockerfile, build image, and restart gateway
+
+set -e  # Exit on any error
+
+echo "Starting Achims_OpenClaw_Build.sh..."
+
+# Backup der Konfigurationsdateien erstellen
+echo "Creating backups..."
+cp "D:\OpenClawConfig\openclaw.json" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\openclaw.json"
+cp "D:\Users\User\git\openclaw\.env" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\.env"
+cp "D:\Users\User\git\openclaw\docker-compose.yml" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\docker-compose.yml"
+cp "D:\Users\User\git\openclaw\Dockerfile" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Dockerfile"
+cp "D:\Users\User\git\openclaw\Achims_README.md" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_README.md"
+cp "D:\Users\User\git\openclaw\Achims_OpenClaw_Build.sh" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_OpenClaw_Build.sh"
+
+
+
+########################################
+# 1) git pull
+########################################
+echo "pulling updates..."
 cd "D:\Users\User\git\openclaw"
 git stash
 
@@ -41,10 +64,16 @@ echo "Resetting achim-local to main (upstream) ..."
 git checkout achim-local
 git merge -Xours main
 
-# Apply custom patches to original files
-echo "Applying custom patches to original files..."
+# Backup Dateien wieder einspielen
+# echo "Restoring backups..."
+# cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/openclaw.json "D:\OpenClawConfig\openclaw.json"
+# cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/.env "D:\Users\User\git\openclaw\.env"
+# cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/docker-compose.yml "D:\Users\User\git\openclaw\docker-compose.yml"
+# cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/Achims_README.md "D:\Users\User\git\openclaw\Achims_README.md"
 
-# Patch Dockerfile: Add Himalaya and Python blocks
+
+
+
 DOCKERFILE_PATH="D:\Users\User\git\openclaw\Dockerfile"
 
 # Block that will be inserted (used both before and after stash pop)
