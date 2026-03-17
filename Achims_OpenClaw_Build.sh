@@ -43,6 +43,7 @@ cp "D:\Users\User\git\openclaw\docker-compose.yml" "C:\Users\User\OneDrive\Win-D
 cp "D:\Users\User\git\openclaw\Dockerfile" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Dockerfile"
 cp "D:\Users\User\git\openclaw\Achims_README.md" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_README.md"
 cp "D:\Users\User\git\openclaw\Achims_OpenClaw_Build.sh" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_OpenClaw_Build.sh"
+cp "D:\Users\User\git\openclaw\Achims_OpenClaw_Build.sh" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_OpenClaw_Build.sh"
 
 
 
