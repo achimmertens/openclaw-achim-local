@@ -12,7 +12,7 @@ else
 fi
 
 # Frage nach, ob git commit gemacht wurde in Achim-local Branch und warte auf ein "y"
-read -p "Have you committed your changes in the achim-local branch? (y/n): " -n 1 -r
+read -p "Are you in the achim-local-branch? Have you committed your changes in the achim-local branch? (y/n): " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Great! Proceeding with the build..."
 else
