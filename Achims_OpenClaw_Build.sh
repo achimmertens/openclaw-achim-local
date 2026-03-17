@@ -116,3 +116,14 @@ docker compose down
 docker compose up 
 
 echo "Build and restart completed successfully!"
+
+# Image sichern und wieder herstellen
+#
+# Sichern des Images
+# docker tag openclaw:local openclaw_achim:local
+# docker save -o openclaw_achim.tar openclaw_achim:local
+#
+# Image wieder herstellen:
+# docker load -i openclaw_achim.tar
+# 
+# In der docker-compose.yml dann das Image auf openclaw_achim:local ändern, damit es verwendet wird.
