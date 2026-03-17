@@ -33,7 +33,7 @@ git stash
 # Offizielles Repo aktualisieren
 echo "Pulling updates from main..."
 git checkout main
-git pull origin main
+git pull origin -Xtheirs main
 
 # Deinen Branch aktualisieren
 # Make achim-local identical to main so OpenClaw updates are imported unconditionally.
