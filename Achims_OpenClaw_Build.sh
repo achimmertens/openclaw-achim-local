@@ -113,31 +113,6 @@ docker build -t openclaw:local .
 # Restart the gateway
 echo "Restarting OpenClaw gateway..."
 docker compose down
-docker compose up -d
+docker compose up 
 
 echo "Build and restart completed successfully!"
-
-# Restore any stashed local changes (may reapply your working changes).
-if git stash list | grep -q "stash@"; then
-  echo "Restoring stashed changes..."
-  git stash pop || true
-  echo "Re-applying custom patches after stash pop..."
-  # Re-run patch logic to ensure the files are still in the desired state
-  # (this will harmlessly skip if already applied).
-  if ! grep -q "Python 3 + venv + beem bereitstellen" "$DOCKERFILE_PATH"; then
-    echo "Re-patching Dockerfile..."
-    # (reuse same patch block as above)
-    USER_LINE=$(grep -n "^USER node" "$DOCKERFILE_PATH" | sed -n 's/^\([0-9]\+\):.*/\1/p' | head -n1)
-    if [ -z "$USER_LINE" ]; then
-      echo "Error: first 'USER node' not found in Dockerfile"
-      exit 1
-    fi
-    awk -v line="$USER_LINE" -v block="$COMBINED_BLOCK" '
-      NR == line { print block; next }
-      { print }
-    ' "$DOCKERFILE_PATH" > tmp_dockerfile && mv tmp_dockerfile "$DOCKERFILE_PATH"
-  fi
-  if ! grep -q "18791:18791" "$COMPOSE_PATH"; then
-    sed -i '/ports:/a\      - "18791:18791"' "$COMPOSE_PATH"
-  fi
-fi
