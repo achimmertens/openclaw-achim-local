@@ -39,7 +39,7 @@ git pull origin main
 # Make achim-local identical to main so OpenClaw updates are imported unconditionally.
 echo "Resetting achim-local to main (upstream) ..."
 git checkout achim-local
-git reset --hard main
+git merge -Xours main
 
 # Apply custom patches to original files
 echo "Applying custom patches to original files..."
