@@ -12,7 +12,7 @@ else
 fi
 
 # Frage nach, ob git commit gemacht wurde in Achim-local Branch und warte auf ein "y"
-read -p "Are you using and have you committed your changes in the achim-local branch? (y/n): " -n 1 -r
+read -p "Are you in the achim-local-branch? Have you committed your changes in the achim-local branch? (y/n): " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Great! Proceeding with the build..."
 else
@@ -33,7 +33,7 @@ git stash
 # Offizielles Repo aktualisieren
 echo "Pulling updates from main..."
 git checkout main
-git pull origin main
+git pull origin -Xtheirs main
 
 # Deinen Branch aktualisieren
 # Make achim-local identical to main so OpenClaw updates are imported unconditionally.
