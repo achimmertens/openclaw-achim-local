@@ -12,6 +12,8 @@ services:
 
 
     volumes:
+      - :/home/node/.openclaw/speech_models
+      - :/home/node/.openclaw/transcripts
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
       - ${OPENCLAW_WORKSPACE_DIR}/workspace-susi:/home/node/.openclaw/workspace/workspace-susi
@@ -73,6 +75,8 @@ services:
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE:-}
       TZ: ${OPENCLAW_TZ:-UTC}
     volumes:
+      - :/home/node/.openclaw/speech_models
+      - :/home/node/.openclaw/transcripts
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
       - ${OPENCLAW_WORKSPACE_DIR}/workspace-susi:/home/node/.openclaw/workspace/workspace-susi

@@ -240,7 +240,17 @@ ENV PATH="/usr/local/bin:${PATH}"
 RUN apt-get update &&     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends       python3 python3-venv ca-certificates curl &&     python3 -m venv /opt/pyenv &&     /opt/pyenv/bin/python -m pip install --no-cache-dir --upgrade pip &&     /opt/pyenv/bin/python -m pip install --no-cache-dir beem &&     apt-get clean &&     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 ENV PATH="/opt/pyenv/bin:${PATH}"
 
+
+# Whisper (Speech-to-Text) prerequisites
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends     build-essential cmake git ffmpeg curl python3 python3-venv python3-pip &&     rm -rf /var/lib/apt/lists/*
+
+# Python venv + whisper (OpenAI Python)
+RUN python3 -m venv /opt/pyenv &&     /opt/pyenv/bin/pip install --upgrade pip setuptools wheel &&     /opt/pyenv/bin/pip install openai-whisper ffmpeg-python &&     /opt/pyenv/bin/python -c "import whisper; whisper.load_model(small, download_root=/home/node/.openclaw/speech_models)" || true
+ENV PATH="/opt/pyenv/bin:${PATH}"
+
 USER node
+
 
 
 # Start gateway server with default config.
