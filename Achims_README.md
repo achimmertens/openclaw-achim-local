@@ -152,3 +152,10 @@ So:
 - bleibt dein `main` sauber und identisch zu upstream,  
 - lebt deine gesamte Arbeit in `achim-local`,  
 - und du hast sie sicher in deinem eigenen GitHub‑Repo, ohne das OpenClaw‑Projekt anzufassen. [stackoverflow](https://stackoverflow.com/questions/63557584/how-do-i-keep-a-local-version-and-commit-changes-on-git-without-pushing-upstream)
+
+# Build Script
+Damit das Builden mit zwei verschiedenen Repositories (offiziell und dein eigenes) einfacher wird, habe ich ein kleines Build‑Script erstellt, das die Schritte automatisiert. Es nimmt die Änderungen vom main Branch, merged sie mit dem aktuellen Stand von `achim-local`, baut das Docker‑Image und startet den Container:
+``` Bash
+./Achims_OpenClaw_Build.sh
+```
+Dort ist auch die Möglichkeiten von der Image-Wiederherstellung beschrieben.
