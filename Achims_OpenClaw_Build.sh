@@ -89,7 +89,7 @@ fi
 # Add docker-compose volume mapping for speech models if not present
 COMPOSE_PATH="D:\Users\User\git\openclaw\docker-compose.yml"
 if ! grep -q "speech_models" "$COMPOSE_PATH" 2>/dev/null; then
-  sed -i "/volumes:/a\      - ${OPENCLAW_SPEECH_MODELS_DIR}:/home/node/.openclaw/speech_models\n      - ${OPENCLAW_SPEECH_TRANSCRIPTS_DIR}:/home/node/.openclaw/transcripts" "$COMPOSE_PATH"
+  sed -i "/volumes:/a\      - ${OPENCLAW_SPEECH_MODELS_DIR:-/home/node/.openclaw/speech_models}:/home/node/.openclaw/speech_models\n      - ${OPENCLAW_SPEECH_TRANSCRIPTS_DIR:-/home/node/.openclaw/transcripts}:/home/node/.openclaw/transcripts" "$COMPOSE_PATH"
   echo "Patched docker-compose.yml with speech volumes"
 else
   echo "docker-compose.yml already contains speech volumes"
