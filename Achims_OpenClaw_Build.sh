@@ -46,7 +46,6 @@ cp "D:\Users\User\git\openclaw\Achims_OpenClaw_Build.sh" "C:\Users\User\OneDrive
 cp "D:\Users\User\git\openclaw\Achims_OpenClaw_Build.sh" "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw\Achims_OpenClaw_Build.sh"
 
 
-
 ########################################
 # 1) git pull
 ########################################
@@ -73,9 +72,55 @@ git merge -Xours main
 # cp "C:\Users\User\OneDrive\Win-Documents\Notizen\Dokumentation\Openclaw"/Achims_README.md "D:\Users\User\git\openclaw\Achims_README.md"
 
 
+# --- Whisper prerequisites patch ---
+# Create model dir environment variables in .env if not present
+ENV_FILE="D:\Users\User\git\openclaw\.env"
+if ! grep -q "OPENCLAW_SPEECH_MODELS_DIR" "$ENV_FILE" 2>/dev/null; then
+  echo "" >> "$ENV_FILE"
+  echo "# Speech to Text (Whisper) settings" >> "$ENV_FILE"
+  echo "OPENCLAW_SPEECH_MODELS_DIR=/home/node/.openclaw/speech_models" >> "$ENV_FILE"
+  echo "OPENCLAW_SPEECH_TRANSCRIPTS_DIR=/home/node/.openclaw/transcripts" >> "$ENV_FILE"
+  echo "Added OPENCLAW_SPEECH_* variables to .env"
+else
+  echo "OPENCLAW_SPEECH_* variables already present in .env"
+fi
 
+# Add docker-compose volume mapping for speech models if not present
+COMPOSE_PATH="D:\Users\User\git\openclaw\docker-compose.yml"
+if ! grep -q "speech_models" "$COMPOSE_PATH" 2>/dev/null; then
+  sed -i "/volumes:/a\      - ${OPENCLAW_SPEECH_MODELS_DIR}:/home/node/.openclaw/speech_models\n      - ${OPENCLAW_SPEECH_TRANSCRIPTS_DIR}:/home/node/.openclaw/transcripts" "$COMPOSE_PATH"
+  echo "Patched docker-compose.yml with speech volumes"
+else
+  echo "docker-compose.yml already contains speech volumes"
+fi
 
+# Add necessary system packages + whisper install block into Dockerfile
 DOCKERFILE_PATH="D:\Users\User\git\openclaw\Dockerfile"
+if ! grep -q "whisper" "$DOCKERFILE_PATH" 2>/dev/null; then
+  # insert before 'USER node' as earlier
+  USER_LINE=$(grep -n "^USER node" "$DOCKERFILE_PATH" | sed -n 's/^\([0-9]\+\):.*/\1/p' | head -n1)
+  if [ -z "$USER_LINE" ]; then
+    echo "Error: first 'USER node' not found in Dockerfile"
+  else
+    WHISPER_BLOCK=$'\n# Whisper (Speech-to-Text) prerequisites\nUSER root\nRUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake git ffmpeg curl python3 python3-venv python3-pip && \
+    rm -rf /var/lib/apt/lists/*\n\n# Python venv + whisper (OpenAI Python)
+RUN python3 -m venv /opt/pyenv && \
+    /opt/pyenv/bin/pip install --upgrade pip setuptools wheel && \
+    /opt/pyenv/bin/pip install openai-whisper ffmpeg-python && \
+    /opt/pyenv/bin/python -c "import whisper; whisper.load_model('small', download_root='/home/node/.openclaw/speech_models')" || true\nENV PATH="/opt/pyenv/bin:${PATH}"\n\nUSER node\n'
+    awk -v line="$USER_LINE" -v block="$WHISPER_BLOCK" 'NR == line { print block; next } { print }' "$DOCKERFILE_PATH" > tmp_dockerfile && mv tmp_dockerfile "$DOCKERFILE_PATH"
+    echo "Dockerfile patched with Whisper prerequisites."
+  fi
+else
+  echo "Dockerfile already contains whisper block"
+fi
+
+#####
+# Himalaya + Python integration
+#####
+
+
 
 # Block that will be inserted (used both before and after stash pop)
 
